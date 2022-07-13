@@ -19,21 +19,21 @@ UserForm = import_attribute(app_settings.USER_EDIT_FORM)
 class Dashboard(BaseWidget):
 
     UID = "dashboard-app"
-    TITLE = "New users requests"
+    TITLE = "Requests"
 
     ########################################################
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = "middle-left"
+    ORQUESTRA_MENU = "user"
     ORQUESTRA_MENU_ICON = "clipboard outline"
     ORQUESTRA_MENU_ORDER = 10
     ########################################################
 
     AUTHORIZED_GROUPS = ["superuser"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def _init_(self, *args, **kwargs):
+        super()._init_(*args, **kwargs)
 
         self._label = ControlLabel()
 
@@ -51,7 +51,7 @@ class Dashboard(BaseWidget):
             label_visible=False,
             css="fluid secondary",
             visible=False,
-            default=self.__edit_evt,
+            default=self._edit_evt,
         )
 
         self._approve = ControlButton(
@@ -59,7 +59,7 @@ class Dashboard(BaseWidget):
             label_visible=False,
             css="fluid green",
             visible=False,
-            default=self.__approve_evt,
+            default=self._approve_evt,
         )
 
         self._remove = ControlButton(
@@ -68,40 +68,40 @@ class Dashboard(BaseWidget):
             css="fluid red",
             field_css="",
             visible=False,
-            default=self.__remove_evt,
+            default=self._remove_evt,
         )
 
         self.formset = [" ", "_label", ("_remove", "_edit", "_approve"), "_list"]
 
-        self.__enable_actions()
+        self._enable_actions()
 
-        self._list.item_selection_changed_event = self.__user_selected_evt
+        self._list.item_selection_changed_event = self._user_selected_evt
 
         self.populate_users_list()
 
     def populate_users_list(self):
         queryset = User.objects.filter(is_active=False)
 
-        self.__update_label(queryset)
+        self._update_label(queryset)
 
         if queryset.exists():
             self._list.value = queryset.annotate(
-                email_confirmed=F("emailaddress__verified")
+                email_confirmed=F("emailaddress_verified")
             )
-            self.__show_actions()
-            self.__disable_actions()
+            self._show_actions()
+            self._disable_actions()
         else:
             self._list.hide()
             self._edit.hide()
             self._approve.hide()
             self._remove.hide()
 
-    def __show_actions(self):
+    def _show_actions(self):
         self._edit.show()
         self._approve.show()
         self._remove.show()
 
-    def __enable_actions(self, user=None):
+    def _enable_actions(self, user=None):
         if user:
             try:
                 user.full_clean()
@@ -114,14 +114,14 @@ class Dashboard(BaseWidget):
             self._approve.enabled = user_is_valid
             self._remove.enabled = True
         else:
-            self.__disable_actions()
+            self._disable_actions()
 
-    def __disable_actions(self):
+    def _disable_actions(self):
         self._edit.enabled = False
         self._approve.enabled = False
         self._remove.enabled = False
 
-    def __update_label(self, queryset):
+    def _update_label(self, queryset):
         if queryset.exists():
             icon = '<i class="ui info circle icon"></i>'
             msg = "Users listed below require approval for accessing the database."
@@ -133,7 +133,7 @@ class Dashboard(BaseWidget):
         self._label.value = icon + msg
         self._label.css = css
 
-    def __user_selected_evt(self):
+    def _user_selected_evt(self):
         user_id = self._list.selected_row_id
         user = User.objects.get(pk=user_id)
 
@@ -141,13 +141,13 @@ class Dashboard(BaseWidget):
         self._approve.label = self._approve_btn_label + f" [{user.username}]"
         self._remove.label = self._remove_btn_label + f" [{user.username}]"
 
-        self.__enable_actions(user=user)
+        self._enable_actions(user=user)
 
-    def __edit_evt(self):
+    def _edit_evt(self):
         app = UserForm(pk=self._list.selected_row_id)
         app.LAYOUT_POSITION = conf.ORQUESTRA_NEW_TAB
 
-    def __approve_evt(self):
+    def _approve_evt(self):
         user_id = self._list.selected_row_id
         user = User.objects.get(pk=user_id)
         user.is_active = True
@@ -162,13 +162,13 @@ class Dashboard(BaseWidget):
         user.save()
 
         self.populate_users_list()
-        self.__disable_actions()
+        self._disable_actions()
 
-    def __remove_evt(self):
+    def _remove_evt(self):
         user_id = self._list.selected_row_id
         user = User.objects.get(pk=user_id)
 
         user.delete()
 
         self.populate_users_list()
-        self.__disable_actions()
+        self._disable_actions()
