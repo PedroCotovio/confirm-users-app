@@ -80,7 +80,7 @@ class Dashboard(BaseWidget):
         self.populate_users_list()
 
     def populate_users_list(self):
-        queryset = User.objects.filter(is_active=False)
+        queryset = User.objects.filter(is_active=True)
 
         self._update_label(queryset)
 
