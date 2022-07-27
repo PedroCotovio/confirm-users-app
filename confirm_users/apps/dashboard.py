@@ -32,8 +32,8 @@ class Dashboard(BaseWidget):
 
     AUTHORIZED_GROUPS = ["superuser"]
 
-    def _init_(self, *args, **kwargs):
-        super()._init_(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Dashboard, self).__init__(*args, **kwargs)
 
         self._label = ControlLabel()
 
@@ -73,11 +73,11 @@ class Dashboard(BaseWidget):
 
         self.formset = [" ", "_label", ("_remove", "_edit", "_approve"), "_list"]
 
-        # self._enable_actions()
-        #
-        # self._list.item_selection_changed_event = self._user_selected_evt
-        #
-        # self.populate_users_list()
+        self._enable_actions()
+
+        self._list.item_selection_changed_event = self._user_selected_evt
+
+        self.populate_users_list()
 
     def populate_users_list(self):
         queryset = User.objects.filter(is_active=False)
