@@ -50,7 +50,10 @@ def notify_superusers_of_new_account(sender, **kwargs):
 def notify_user_activated(sender, instance, **kwargs):
     """Notifies a user whose account has been activated."""
 
-    if instance._state.adding is True:
+    try:
+        obj = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+
         pass  # do nothing on user creation
     else:
         if instance.is_active and obj.is_active != instance.is_active:
