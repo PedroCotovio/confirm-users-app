@@ -25,12 +25,13 @@ def notify_superusers_of_new_account(sender, **kwargs):
     awaiting approval.
     """
 
-    # TODO alert platform managers also
-
     if sender == User:
         user = kwargs["user"]
     else:
         user = kwargs["email_address"].user
+
+    user.is_active = False
+    user.save()
 
     primary_email = EmailAddress.objects.get_primary(user=user)
 
@@ -49,9 +50,7 @@ def notify_superusers_of_new_account(sender, **kwargs):
 def notify_user_activated(sender, instance, **kwargs):
     """Notifies a user whose account has been activated."""
 
-    try:
-        obj = sender.objects.get(pk=instance.pk)
-    except sender.DoesNotExist:
+    if instance._state.adding is True:
         pass  # do nothing on user creation
     else:
         if instance.is_active and obj.is_active != instance.is_active:
