@@ -30,12 +30,12 @@ def notify_superusers_of_new_account(sender, **kwargs):
     else:
         user = kwargs["email_address"].user
 
-    user.is_active = False
-    user.save()
-
     primary_email = EmailAddress.objects.get_primary(user=user)
 
-    if not user.is_active and primary_email.verified:
+    if primary_email.verified:
+        user.is_active = False
+        user.save()
+
         logger.info("New account awaiting approval for user %s", user)
         for su in User.objects.filter(is_superuser=True):
             send_mail(
