@@ -80,7 +80,7 @@ class Dashboard(BaseWidget):
         self.populate_users_list()
 
     def populate_users_list(self):
-        queryset = User.objects.filter(is_active=True)
+        queryset = User.objects.filter(is_active=False)
 
         self._update_label(queryset)
 
@@ -90,11 +90,11 @@ class Dashboard(BaseWidget):
             )
             self._show_actions()
             self._disable_actions()
-        else:
-            self._list.hide()
-            self._edit.hide()
-            self._approve.hide()
-            self._remove.hide()
+        # else:
+        #     self._list.hide()
+        #     self._edit.hide()
+        #     self._approve.hide()
+        #     self._remove.hide()
 
     def _show_actions(self):
         self._edit.show()
