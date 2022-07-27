@@ -9,6 +9,7 @@ from pyforms.controls import ControlQueryList
 
 from ..utils import import_attribute
 from .. import app_settings
+from allauth.account.models import EmailAddress
 
 
 User = get_user_model()
@@ -86,7 +87,7 @@ class Dashboard(BaseWidget):
 
         if queryset.exists():
             self._list.value = queryset.annotate(
-                email_confirmed=F("emailaddress_verified")
+                email_confirmed=Subquery(EmailAddress.objects.filter(user=F('user')).values('verified')[:1])
             )
             self._show_actions()
             self._disable_actions()
