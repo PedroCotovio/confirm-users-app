@@ -73,11 +73,11 @@ class Dashboard(BaseWidget):
 
         self.formset = [" ", "_label", ("_remove", "_edit", "_approve"), "_list"]
 
-        self._enable_actions()
-
-        self._list.item_selection_changed_event = self._user_selected_evt
-
-        self.populate_users_list()
+        # self._enable_actions()
+        #
+        # self._list.item_selection_changed_event = self._user_selected_evt
+        #
+        # self.populate_users_list()
 
     def populate_users_list(self):
         queryset = User.objects.filter(is_active=False)
@@ -90,11 +90,11 @@ class Dashboard(BaseWidget):
             )
             self._show_actions()
             self._disable_actions()
-        # else:
-        #     self._list.hide()
-        #     self._edit.hide()
-        #     self._approve.hide()
-        #     self._remove.hide()
+        else:
+            self._list.hide()
+            self._edit.hide()
+            self._approve.hide()
+            self._remove.hide()
 
     def _show_actions(self):
         self._edit.show()
