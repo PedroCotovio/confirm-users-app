@@ -2,6 +2,7 @@ from confapp import conf
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models.expressions import F
+from django.db.models import Subquery
 from pyforms.basewidget import BaseWidget
 from pyforms.controls import ControlLabel
 from pyforms.controls import ControlButton
