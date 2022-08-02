@@ -27,7 +27,7 @@ class Dashboard(BaseWidget):
     #### ORQUESTRA CONFIGURATION ###########################
     ########################################################
     LAYOUT_POSITION = conf.ORQUESTRA_HOME
-    ORQUESTRA_MENU = "user"
+    ORQUESTRA_MENU = "left>ManagementApp"
     ORQUESTRA_MENU_ICON = "clipboard outline"
     ORQUESTRA_MENU_ORDER = 10
     ########################################################
