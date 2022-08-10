@@ -21,7 +21,7 @@ UserForm = import_attribute(app_settings.USER_EDIT_FORM)
 class Dashboard(BaseWidget):
 
     UID = "dashboard-app"
-    TITLE = "Requests"
+    TITLE = "User Approval"
 
     ########################################################
     #### ORQUESTRA CONFIGURATION ###########################
